@@ -35,7 +35,7 @@ template <typename T> inline auto ApproxZero(const T& a) -> bool {
     return a[0] == Zero && a[1] == Zero && a[2] == Zero;
 }
 
-template <typename PG> void chk_ck(const PG& myck) {
+template <typename PG> void chk_ck_int(const PG& myck) {
     using P = typename PG::point_t;
     using K = Value_type<P>;
 
@@ -54,37 +54,55 @@ template <typename PG> void chk_ck(const PG& myck) {
 
     const auto a4 = P{3, 0, 2};
 
-    if constexpr (Integral<K>) {
-        CHECK(incident(l1, a2));
-        CHECK(myck.is_perpendicular(t1, l1));
-        CHECK(coincident(t1 * t2, t3));
-        CHECK(o == t2 * t3);
-        CHECK(a1 == myck.orthocenter(std::array{std::move(o), std::move(a2), std::move(a3)}));
-        CHECK(tau(tau(a4)) == a4);
-        // CHECK(myck.spread(l2, l2) == K(0));
-        // CHECK(myck.spread(l3, l3) == K(0));
-        // CHECK(myck.quadrance(a1, a1) == K(0));
-        CHECK(check_sine_law(Q, S));
-        CHECK(check_sine_law(S, Q));
-    } else {
-        CHECK(l1.dot(a2) == Zero);
-        CHECK(l1.dot(myck.perp(t1)) == Zero);
-        CHECK(t1.dot(t2 * t3) == Zero);
-        CHECK(ApproxZero(cross(o, t2 * t3)));
-        const auto o2 = myck.orthocenter(std::array{std::move(o), std::move(a2), std::move(a3)});
-        CHECK(ApproxZero(cross(a1, o2)));
-        CHECK(ApproxZero(cross(tau(tau(a4)), a4)));
-        CHECK(myck.measure(l2, l2) == Zero);
-        CHECK(myck.measure(l3, l3) == Zero);
-        CHECK(myck.measure(a1, a1) == Zero);
-        const auto& [q1, q2, q3] = Q;
-        const auto& [s1, s2, s3] = S;
+    CHECK(incident(l1, a2));
+    CHECK(myck.is_perpendicular(t1, l1));
+    CHECK(coincident(t1 * t2, t3));
+    CHECK(o == t2 * t3);
+    CHECK(a1 == myck.orthocenter(std::array{std::move(o), std::move(a2), std::move(a3)}));
+    CHECK(tau(tau(a4)) == a4);
+    // CHECK(myck.spread(l2, l2) == K(0));
+    // CHECK(myck.spread(l3, l3) == K(0));
+    // CHECK(myck.quadrance(a1, a1) == K(0));
+    CHECK(check_sine_law(Q, S));
+    CHECK(check_sine_law(S, Q));
+}
 
-        const auto r1 = q1 * s2 - q2 * s1;
-        const auto r2 = q2 * s3 - q3 * s2;
-        CHECK(r1 == Zero);
-        CHECK(r2 == Zero);
-    }
+template <typename PG> void chk_ck_float(const PG& myck) {
+    using P = typename PG::point_t;
+    using K = Value_type<P>;
+
+    auto a1 = P{1, -2, 3};
+    auto a2 = P{4, 0, 6};
+    auto a3 = P{-7, 1, 2};
+    const auto triangle = std::array{std::move(a1), std::move(a2), std::move(a3)};
+    const auto trilateral = tri_dual(triangle);
+    const auto& [l1, l2, l3] = trilateral;
+    const auto [t1, t2, t3] = myck.tri_altitude(triangle);
+
+    auto o = myck.orthocenter(triangle);
+    const auto tau = myck.reflect(l1);
+    const auto Q = myck.tri_quadrance(triangle);
+    const auto S = myck.tri_spread(trilateral);
+
+    const auto a4 = P{3, 0, 2};
+
+    CHECK(l1.dot(a2) == Zero);
+    CHECK(l1.dot(myck.perp(t1)) == Zero);
+    CHECK(t1.dot(t2 * t3) == Zero);
+    CHECK(ApproxZero(cross(o, t2 * t3)));
+    const auto o2 = myck.orthocenter(std::array{std::move(o), std::move(a2), std::move(a3)});
+    CHECK(ApproxZero(cross(a1, o2)));
+    CHECK(ApproxZero(cross(tau(tau(a4)), a4)));
+    CHECK(myck.measure(l2, l2) == Zero);
+    CHECK(myck.measure(l3, l3) == Zero);
+    CHECK(myck.measure(a1, a1) == Zero);
+    const auto& [q1, q2, q3] = Q;
+    const auto& [s1, s2, s3] = S;
+
+    const auto r1 = q1 * s2 - q2 * s1;
+    const auto r2 = q2 * s3 - q3 * s2;
+    CHECK(r1 == Zero);
+    CHECK(r2 == Zero);
 }
 
 template <typename P, typename L = typename P::dual>
@@ -105,33 +123,33 @@ struct myck : ck<P, L, myck> {
 };
 
 TEST_CASE("CK plane chk_ck (int)") {
-    chk_ck(myck<pg_point<int>>());
-    chk_ck(myck<pg_line<int>>());
-    chk_ck(ellck<pg_point<int>>());
-    chk_ck(ellck<pg_line<int>>());
-    chk_ck(hyck<pg_point<int>>());
-    chk_ck(hyck<pg_line<int>>());
+    chk_ck_int(myck<pg_point<int>>());
+    chk_ck_int(myck<pg_line<int>>());
+    chk_ck_int(ellck<pg_point<int>>());
+    chk_ck_int(ellck<pg_line<int>>());
+    chk_ck_int(hyck<pg_point<int>>());
+    chk_ck_int(hyck<pg_line<int>>());
 
     auto Ire = pg_point<int>{0, 1, 1};
     auto Iim = pg_point<int>{1, 0, 0};
     auto l_inf = pg_line<int>{0, -1, 1};
 
     auto P = persp_euclid_plane{std::move(Ire), std::move(Iim), std::move(l_inf)};
-    chk_ck(P);
+    chk_ck_int(P);
 }
 
 TEST_CASE("CK plane chk_ck (float)") {
-    chk_ck(myck<pg_point<double>>());
-    chk_ck(myck<pg_line<double>>());
-    chk_ck(ellck<pg_point<float>>());
-    chk_ck(ellck<pg_line<float>>());
-    chk_ck(hyck<pg_point<double>>());
-    chk_ck(hyck<pg_line<double>>());
+    chk_ck_float(myck<pg_point<double>>());
+    chk_ck_float(myck<pg_line<double>>());
+    chk_ck_float(ellck<pg_point<float>>());
+    chk_ck_float(ellck<pg_line<float>>());
+    chk_ck_float(hyck<pg_point<double>>());
+    chk_ck_float(hyck<pg_line<double>>());
 
     auto Ire = pg_point{0., 1., 1.};
     auto Iim = pg_point{1., 0., 0.};
     auto l_inf = pg_line{0., -1., 1.};
 
     auto P = persp_euclid_plane{std::move(Ire), std::move(Iim), std::move(l_inf)};
-    chk_ck(P);
+    chk_ck_float(P);
 }
