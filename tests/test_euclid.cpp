@@ -4,7 +4,6 @@
 #include <doctest/doctest.h>  // for ResultBuilder
 
 #include <array>                             // for operator==
-#include <boost/multiprecision/cpp_int.hpp>  // for cpp_int
 #include <ostream>                           // for operator<<
 #include <tuple>                             // for tuple
 #include <type_traits>                       // for move
@@ -156,12 +155,10 @@ template <typename T> void chk_cyclic(const T& quadangle) {
     }
 }
 
-TEST_CASE("Euclid plane (cpp_int)") {
-    using boost::multiprecision::cpp_int;
-
-    auto a1 = pg_point<cpp_int>{1, 3, 1};
-    auto a2 = pg_point<cpp_int>{4, 2, 1};
-    auto a3 = pg_point<cpp_int>{4, -3, 1};
+TEST_CASE("Euclid plane (int)") {
+    auto a1 = pg_point<int>{1, 3, 1};
+    auto a2 = pg_point<int>{4, 2, 1};
+    auto a3 = pg_point<int>{4, -3, 1};
 
     auto triangle = std::array{std::move(a1), std::move(a2), std::move(a3)};
     chk_euclid(triangle);
@@ -176,9 +173,8 @@ TEST_CASE("Euclid plane (floating point)") {
     chk_euclid(triangle);
 }
 
-TEST_CASE("Euclid Cyclic Points (cpp_int)") {
-    using boost::multiprecision::cpp_int;
-    using P = pg_point<cpp_int>;
+TEST_CASE("Euclid Cyclic Points (int)") {
+    using P = pg_point<int>;
 
     auto u1 = uc_point<P>(1, 0);
     auto u2 = uc_point<P>(3, 4);

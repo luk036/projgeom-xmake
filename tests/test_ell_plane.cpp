@@ -4,7 +4,6 @@
 #include <doctest/doctest.h>  // for ResultBuilder
 
 #include <array>                             // for operator==
-#include <boost/multiprecision/cpp_int.hpp>  // for cpp_int
 #include <ostream>                           // for operator<<
 #include <tuple>                             // for get, tuple
 #include <type_traits>                       // for move
@@ -98,17 +97,15 @@ template <typename PG> void chk_tri2(const PG& myck) {
 }
 
 TEST_CASE("Elliptic/Hyperbolic plane") {
-    using boost::multiprecision::cpp_int;
+    chk_tri(ellck<pg_point<int>>());
+    chk_tri(ellck<pg_line<int>>());
+    chk_tri(hyck<pg_point<int>>());
+    chk_tri(hyck<pg_line<int>>());
 
-    chk_tri(ellck<pg_point<cpp_int>>());
-    chk_tri(ellck<pg_line<cpp_int>>());
-    chk_tri(hyck<pg_point<cpp_int>>());
-    chk_tri(hyck<pg_line<cpp_int>>());
-
-    chk_tri2(ellck<pg_point<cpp_int>>());
-    chk_tri2(ellck<pg_line<cpp_int>>());
-    chk_tri2(hyck<pg_point<cpp_int>>());
-    chk_tri2(hyck<pg_line<cpp_int>>());
+    chk_tri2(ellck<pg_point<int>>());
+    chk_tri2(ellck<pg_line<int>>());
+    chk_tri2(hyck<pg_point<int>>());
+    chk_tri2(hyck<pg_line<int>>());
 }
 
 TEST_CASE("Elliptic/Hyperbolic plane (double)") {

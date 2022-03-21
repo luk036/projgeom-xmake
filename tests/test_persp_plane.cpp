@@ -3,7 +3,6 @@
  */
 #include <doctest/doctest.h>  // for ResultBuilder
 
-#include <boost/multiprecision/cpp_int.hpp>  // for cpp_int
 #include <ostream>                           // for operator<<
 #include <tuple>                             // for tuple
 #include <type_traits>                       // for move
@@ -98,12 +97,10 @@ template <typename PG> void chk_degenerate2(const PG& myck) {
     }
 }
 
-TEST_CASE("Perspective Euclid plane (cpp_int)") {
-    using boost::multiprecision::cpp_int;
-
-    auto Ire = pg_point<cpp_int>(0, 1, 1);
-    auto Iim = pg_point<cpp_int>(1, 0, 0);
-    auto l_inf = pg_line<cpp_int>(0, -1, 1);
+TEST_CASE("Perspective Euclid plane (int)") {
+    auto Ire = pg_point<int>(0, 1, 1);
+    auto Iim = pg_point<int>(1, 0, 0);
+    auto l_inf = pg_line<int>(0, -1, 1);
 
     const auto P = persp_euclid_plane{std::move(Ire), std::move(Iim), std::move(l_inf)};
     chk_degenerate(P);

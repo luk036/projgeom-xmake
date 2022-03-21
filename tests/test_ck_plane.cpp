@@ -4,7 +4,6 @@
 #include <doctest/doctest.h>  // for ResultBuilder
 
 #include <array>                             // for operator==
-#include <boost/multiprecision/cpp_int.hpp>  // for cpp_int
 #include <ostream>                           // for operator<<
 #include <tuple>                             // for tuple
 #include <type_traits>                       // for move
@@ -106,20 +105,16 @@ struct myck : ck<P, L, myck> {
 };
 
 TEST_CASE("CK plane chk_ck (int)") {
-    // using boost::multiprecision::cpp_int;
-    // namespace mp = boost::multiprecision;
-    using boost::multiprecision::cpp_int;
+    chk_ck(myck<pg_point<int>>());
+    chk_ck(myck<pg_line<int>>());
+    chk_ck(ellck<pg_point<int>>());
+    chk_ck(ellck<pg_line<int>>());
+    chk_ck(hyck<pg_point<int>>());
+    chk_ck(hyck<pg_line<int>>());
 
-    chk_ck(myck<pg_point<cpp_int>>());
-    chk_ck(myck<pg_line<cpp_int>>());
-    chk_ck(ellck<pg_point<cpp_int>>());
-    chk_ck(ellck<pg_line<cpp_int>>());
-    chk_ck(hyck<pg_point<cpp_int>>());
-    chk_ck(hyck<pg_line<cpp_int>>());
-
-    auto Ire = pg_point<cpp_int>{0, 1, 1};
-    auto Iim = pg_point<cpp_int>{1, 0, 0};
-    auto l_inf = pg_line<cpp_int>{0, -1, 1};
+    auto Ire = pg_point<int>{0, 1, 1};
+    auto Iim = pg_point<int>{1, 0, 0};
+    auto l_inf = pg_line<int>{0, -1, 1};
 
     auto P = persp_euclid_plane{std::move(Ire), std::move(Iim), std::move(l_inf)};
     chk_ck(P);

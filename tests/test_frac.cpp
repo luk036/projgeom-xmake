@@ -3,7 +3,6 @@
  */
 #include <doctest/doctest.h>  // for ResultBuilder
 
-#include <boost/multiprecision/cpp_int.hpp>  // for cpp_int
 #include <ostream>                           // for operator<<
 
 #include "projgeom/common_concepts.h"  // for fun
@@ -19,26 +18,25 @@ TEST_CASE("undefined behavior") {
 }
 
 TEST_CASE("Fraction") {
-    using boost::multiprecision::cpp_int;
-    static_assert(Integral<cpp_int>);
+    static_assert(Integral<int>);
 
-    const auto a = cpp_int{3};
-    const auto b = cpp_int{4};
-    const auto c = cpp_int{5};
-    const auto d = cpp_int{6};
-    const auto f = cpp_int{-30};
-    const auto g = cpp_int{40};
-    const auto z = cpp_int{0};
-    const auto h = cpp_int{-g};
+    const auto a = int{3};
+    const auto b = int{4};
+    const auto c = int{5};
+    const auto d = int{6};
+    const auto f = int{-30};
+    const auto g = int{40};
+    const auto z = int{0};
+    const auto h = int{-g};
 
     const auto p = Fraction{a, b};
     // std::cout << p << '\n';
     const auto q = Fraction{c, d};
 
-    CHECK(p == Fraction<cpp_int>(30, 40));
-    CHECK(p + q == Fraction<cpp_int>(19, 12));
-    CHECK(p - q == Fraction<cpp_int>(-1, 12));
-    CHECK(p != cpp_int(0));
+    CHECK(p == Fraction<int>(30, 40));
+    CHECK(p + q == Fraction<int>(19, 12));
+    CHECK(p - q == Fraction<int>(-1, 12));
+    CHECK(p != int(0));
 }
 
 TEST_CASE("Fraction Special Cases") {
