@@ -1,6 +1,8 @@
+set_languages("c++20")
+
 add_rules("mode.debug", "mode.release", "mode.coverage")
 add_requires("conan::fmt/8.1.1", {alias = "fmt"})
-add_requires("conan::doctest/2.4.8", {alias = "doctest"})
+add_requires("conan::doctest/2.4.5", {alias = "doctest"})
 add_requires("conan::range-v3/0.11.0", {alias = "range-v3"})
 set_languages("c++20")
 
