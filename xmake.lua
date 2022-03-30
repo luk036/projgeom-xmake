@@ -11,6 +11,11 @@ target("test")
     set_kind("binary")
     add_includedirs("include", {public = true})
     add_files("tests/*.cpp")
+    if is_plat("linux") then
+        add_cxflags("-fconcepts", {force = true})
+    elseif is_plat("windows") then
+        add_cxflags("-fconcepts", {force = true})
+    end
     add_packages("fmt", "doctest", "range-v3")
 
 --
