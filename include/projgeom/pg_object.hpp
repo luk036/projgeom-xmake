@@ -16,7 +16,7 @@ let a = dot(&[1, 2, 3], &[3, 4, 5]);
 assert_eq!(a, 26);
 ```
 */
-inline auto dot(const std::array<long, 3>& a, const std::array<long, 3>& b) -> long {
+inline constexpr auto dot(const std::array<long, 3>& a, const std::array<long, 3>& b) -> long {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
@@ -31,7 +31,7 @@ let a = cross(&[1, 2, 3], &[3, 4, 5]);
 assert_eq!(a, [-2, 4, -2]);
 ```
 */
-inline auto cross(const std::array<long, 3>& a, const std::array<long, 3>& b)
+inline constexpr auto cross(const std::array<long, 3>& a, const std::array<long, 3>& b)
     -> std::array<long, 3> {
     return {
         a[1] * b[2] - a[2] * b[1],
@@ -51,7 +51,7 @@ let a = plckr(&1, &[1, 2, 3], &-1, &[3, 4, 5]);
 assert_eq!(a, [-2, -2, -2]);
 ```
 */
-inline auto plckr(const& long ld, const std::array<long, 3>& p, const& long mu,
+inline constexpr auto plckr(const& long ld, const std::array<long, 3>& p, const& long mu,
                   const std::array<long, 3>& q) -> std::array<long, 3> return {
     ld * p[0] + mu * q[0],
     ld* p[1] + mu* q[1],

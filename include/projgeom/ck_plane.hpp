@@ -34,7 +34,7 @@ namespace fun {
      */
     template <class P, class L>
     requires CKPlanePrimDual<P, L>
-    auto is_perpendicular(const L& m1, const L& m2) -> bool { return m1.perp().incident(m2); }
+    inline constexpr auto is_perpendicular(const L& m1, const L& m2) -> bool { return m1.perp().incident(m2); }
 
     /**
      * @brief
@@ -44,7 +44,7 @@ namespace fun {
      */
     template <class P, class L>
     requires CKPlanePrimDual<P, L>
-    auto altitude(const P& p, const L& m) -> L { return m.perp().circ(p); }
+    inline constexpr auto altitude(const P& p, const L& m) -> L { return m.perp().circ(p); }
 
     /**
      * @brief
@@ -54,7 +54,7 @@ namespace fun {
      */
     template <class P, class L>
     requires CKPlanePrimDual<P, L>
-    auto orthocenter(const std::array<P, 3>& tri) -> P {
+    inline constexpr auto orthocenter(const std::array<P, 3>& tri) -> P {
         const auto& [a1, a2, a3] = tri;
         assert(!coincident(a1, a2, a3));
         const auto t1 = altitude(a1, a2.circ(a3));
@@ -71,7 +71,7 @@ namespace fun {
      */
     template <class P, class L>
     requires CKPlanePrimDual<P, L>
-    auto tri_altitude(const std::array<P, 3>& tri) -> std::array<L, 3> {
+    inline constexpr auto tri_altitude(const std::array<P, 3>& tri) -> std::array<L, 3> {
         const auto [l1, l2, l3] = tri_dual(tri);
         const auto& [a1, a2, a3] = tri;
         assert(!coincident(a1, a2, a3));
@@ -101,7 +101,7 @@ namespace fun {
 
     template <class P, class L, typename V>
     requires CKPlaneDual<P, L, V>
-    auto reflect(const P& origin, const L& mirror, const P& p) -> P {
+    inline constexpr auto reflect(const P& origin, const L& mirror, const P& p) -> P {
         return involution(mirror.perp(), mirror, p);
     }
 
