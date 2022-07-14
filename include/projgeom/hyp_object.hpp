@@ -30,20 +30,3 @@ inline constexpr auto HypLine::perp() const -> HypPoint {
     return HypPoint({this->coord[0], this->coord[1], -this->coord[2]});
 }
 
-// impl CKPlanePrim<HypLine> for HypPoint {
-//     #[inline]
-//     fn perp(&self) -> HypLine {
-//         HypLine::new(self.coord)
-//     }
-// }
-//
-// impl CKPlanePrim<HypPoint> for HypLine {
-//     #[inline]
-//     fn perp(&self) -> HypPoint {
-//         HypPoint::new(self.coord)
-//     }
-// }
-//
-// impl CKPlane<HypLine, i128> for HypPoint {}
-//
-// impl CKPlane<HypPoint, i128> for HypLine {}

@@ -12,7 +12,7 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
-    template <class P, class L>
+    template <class P, class L = typename P::Dual>
     concept CKPlanePrim = ProjPlanePrim<P, L> && requires(const P& p, const L& l) {
         { p.perp() } -> STD_ALT::convertible_to<L>;
     };
@@ -23,7 +23,7 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
-    template <class P, class L>
+    template <class P, class L = typename P::Dual>
     concept CKPlanePrimDual = CKPlanePrim<P, L> && CKPlanePrim<L, P>;
 
     /**
@@ -32,8 +32,8 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
-    template <class P, class L>
-    requires CKPlanePrimDual<P, L>
+    template <class L, class P = typename L::Dual>
+    requires CKPlanePrimDual<L, P>
     inline constexpr auto is_perpendicular(const L& m1, const L& m2) -> bool { return m1.perp().incident(m2); }
 
     /**
@@ -52,8 +52,8 @@ namespace fun {
      * @param[in] tri
      * @return std::arrary<L, 3>
      */
-    template <class P, class L>
-    requires CKPlanePrimDual<P, L>
+    template <class P>
+    requires CKPlanePrimDual<P>
     inline constexpr auto orthocenter(const std::array<P, 3>& tri) -> P {
         const auto& [a1, a2, a3] = tri;
         assert(!coincident(a1, a2, a3));
@@ -69,8 +69,8 @@ namespace fun {
      * @param[in] tri
      * @return std::arrary<L, 3>
      */
-    template <class P, class L>
-    requires CKPlanePrimDual<P, L>
+    template <class P>
+    requires CKPlanePrimDual<P>
     inline constexpr auto tri_altitude(const std::array<P, 3>& tri) -> std::array<L, 3> {
         const auto [l1, l2, l3] = tri_dual(tri);
         const auto& [a1, a2, a3] = tri;
@@ -87,8 +87,8 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
-    template <class P, class L, typename V>
-    concept CKPlane = ProjPlane<P, L, V> && CKPlanePrim<P, L>;
+    template <typename V, class P, class L = typename P::Dual>
+    concept CKPlane = ProjPlane<V, P, L> && CKPlanePrim<P, L>;
 
     /**
      * @brief C-K plane dual Concept
@@ -96,11 +96,11 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
-    template <class P, class L, typename V>
-    concept CKPlaneDual = CKPlane<P, L, V> && CKPlane<L, P, V>;
+    template <typename V, class P, class L = typename P::Dual>
+    concept CKPlaneDual = CKPlane<V, P, L> && CKPlane<L, P, V>;
 
-    template <class P, class L, typename V>
-    requires CKPlaneDual<P, L, V>
+    template <typename V, class P, class L = typename P::Dual>
+    requires CKPlaneDual<V, P, L>
     inline constexpr auto reflect(const P& origin, const L& mirror, const P& p) -> P {
         return involution(mirror.perp(), mirror, p);
     }

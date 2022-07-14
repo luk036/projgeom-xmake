@@ -63,10 +63,11 @@ plckr(const int64_t& ld, const std::array<int64_t, 3>& p,
 
 template <typename P, typename L>
 class PgObject {
-  protected:
+  public:
+    using Dual = L;
+
     std::array<int64_t, 3> coord;
 
-  public:
     constexpr explicit PgObject(std::array<int64_t, 3> coord)
         : coord{std::move(coord)} {}
     
@@ -94,7 +95,7 @@ class PgObject {
         return this->dot(other) == 0; 
     }
 
-    constexpr auto circ(const P& rhs) -> L {
+    constexpr auto circ(const P& rhs) const -> L {
         return L{::cross(this->coord, rhs.coord)};
     }
 };
