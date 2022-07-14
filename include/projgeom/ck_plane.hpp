@@ -69,8 +69,8 @@ namespace fun {
      * @param[in] tri
      * @return std::arrary<L, 3>
      */
-    template <class P>
-    requires CKPlanePrimDual<P>
+    template <class P, class L>
+    requires CKPlanePrimDual<P, L>
     inline constexpr auto tri_altitude(const std::array<P, 3>& tri) -> std::array<L, 3> {
         const auto [l1, l2, l3] = tri_dual(tri);
         const auto& [a1, a2, a3] = tri;
