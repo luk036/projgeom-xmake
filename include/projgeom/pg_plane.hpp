@@ -33,10 +33,13 @@ namespace fun {
      *
      * @tparam P Point
      * @tparam L Line
+     * @param[in] p 
+     * @param[in] q 
+     * @param[in] l 
      */
     template <class P, class L = typename P::Dual>
     requires ProjPlanePrimDual<P, L>
-    inline auto check_axiom(const P& p, const P& q, const L& l) {
+    inline auto check_axiom(const P& p, const P& q, const L& l) -> void {
         assert(p == p);
         assert((p == q) == (q == p));
         assert(p.incident(l) == l.incident(p));
@@ -48,8 +51,12 @@ namespace fun {
     /**
      * @brief Coincident
      *
-     * @tparam P Point
-     * @tparam L Line
+     * @tparam P 
+     * @param[in] p 
+     * @param[in] q 
+     * @param[in] r 
+     * @return true 
+     * @return false 
      */
     template <class P>
     requires ProjPlanePrimDual<P>
@@ -61,9 +68,10 @@ namespace fun {
      * @brief Check Pappus Theorem
      *
      * @tparam P Point
-     * @tparam L Line
      * @param[in] co1
      * @param[in] co2
+     * @return true 
+     * @return false 
      */
     template <class P>
     requires ProjPlanePrimDual<P>
@@ -78,10 +86,12 @@ namespace fun {
     }
 
     /**
-     * @brief
-     *
+     * @brief Dual of triangle
+     * 
+     * @tparam P Point
+     * @tparam L Line 
      * @param[in] tri
-     * @return std::arrary<L, 3>
+     * @return std::array<L, 3> 
      */
     template <class P, class L = typename P::Dual>
     requires ProjPlanePrimDual<P, L>
@@ -94,6 +104,7 @@ namespace fun {
     /**
      * @brief return whether two triangles are perspective
      *
+     * @tparam P Point
      * @param[in] tri1
      * @param[in] tri2
      * @return true
@@ -110,10 +121,13 @@ namespace fun {
     }
 
     /**
-     * @brief
+     * @brief Check Desargue's Theorem
      *
+     * @tparam P Point
      * @param[in] tri1
      * @param[in] tri2
+     * @return true
+     * @return false
      */
     template <class P>
     requires ProjPlanePrimDual<P>
@@ -129,14 +143,13 @@ namespace fun {
     /**
      * @brief Projective plane Concept
      *
+     * @tparam V 
      * @tparam P Point
      * @tparam L Line
      */
     template <typename V, class P, class L = typename P::Dual>
-    concept ProjPlane
-        = STD_ALT::equality_comparable<P> && ProjPlanePrim<P, L> && requires(const P& p, const P& q,
-                                                                             const L& l,
-                                                                             const V& a) {
+    concept ProjPlane = STD_ALT::equality_comparable<P> && ProjPlanePrim<P, L> //
+        && requires(const P& p, const P& q, const L& l, const V& a) {
         { p.aux() } -> STD_ALT::convertible_to<L>;                 // line not incident with p
         { p.dot(l) } -> STD_ALT::convertible_to<V>;                // for basic measurement
         { P::plucker(a, p, a, q) } -> STD_ALT::convertible_to<P>;  // module computation
@@ -145,6 +158,7 @@ namespace fun {
     /**
      * @brief Projective plane dual Concept
      *
+     * @tparam V 
      * @tparam P Point
      * @tparam L Line
      */
@@ -157,9 +171,22 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
+
+    /**
+     * @brief Check Axiom
+     * 
+     * @tparam V 
+     * @tparam P 
+     * @tparam P::Dual 
+     * @param[in] p 
+     * @param[in] q 
+     * @param[in] l 
+     * @param[in] a 
+     * @param[in] b 
+     */
     template <typename V, class P, class L = typename P::Dual>
     requires ProjPlaneDual<V, P, L>
-    inline auto check_axiom2(const P& p, const P& q, const L& l, const V& a, const V& b) {
+    inline auto check_axiom2(const P& p, const P& q, const L& l, const V& a, const V& b) -> void {
         assert(p.dot(l) == l.dot(p));
         assert(!p.aux().incident(p));
         const auto m = p.circ(q);
@@ -169,6 +196,12 @@ namespace fun {
     /**
      * @brief harmonic conjugate
      *
+     * @tparam V 
+     * @tparam P 
+     * @param[in] a 
+     * @param[in] b 
+     * @param[in] c 
+     * @return P 
      */
     template <typename V, class P>
     requires ProjPlaneDual<V, P>
@@ -179,6 +212,17 @@ namespace fun {
         return P::plucker(lc.dot(a), a, lc.dot(b), b);
     }
 
+    /**
+     * @brief Involution
+     * 
+     * @tparam V 
+     * @tparam P 
+     * @tparam P::Dual 
+     * @param[in] origin 
+     * @param[in] mirror 
+     * @param[in] p 
+     * @return P 
+     */
     template <typename V, class P, class L = typename P::Dual>
     requires ProjPlaneDual<V, P, L>
     inline constexpr auto involution(const P& origin, const L& mirror, const P& p) -> P {

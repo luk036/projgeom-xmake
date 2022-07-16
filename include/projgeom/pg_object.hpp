@@ -6,32 +6,24 @@
 #include "pg_plane.hpp"
 
 /**
-Dot product
-
-Examples:
-
-```cpp
-use projgeom_rs::pg_object::dot;
-let a = dot(&[1, 2, 3], &[3, 4, 5]);
-assert_eq!(a, 26);
-```
-*/
+ * @brief Dot product
+ * 
+ * @param[in] a 
+ * @param[in] b 
+ * @return int64_t 
+ */
 inline constexpr auto dot(const std::array<int64_t, 3>& a, const std::array<int64_t, 3>& b)
     -> int64_t {
     return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
 /**
-Cross product
-
-Examples:
-
-```cpp
-use projgeom_rs::pg_object::cross;
-let a = cross(&[1, 2, 3], &[3, 4, 5]);
-assert_eq!(a, [-2, 4, -2]);
-```
-*/
+ * @brief Cross product
+ * 
+ * @param[in] a 
+ * @param[in] b 
+ * @return std::array<int64_t, 3> 
+ */
 inline constexpr auto cross(const std::array<int64_t, 3>& a, const std::array<int64_t, 3>& b)
     -> std::array<int64_t, 3> {
     return {
@@ -42,16 +34,14 @@ inline constexpr auto cross(const std::array<int64_t, 3>& a, const std::array<in
 }
 
 /**
-Plucker operation
-
-Examples:
-
-```cpp
-use projgeom_rs::pg_object::plckr;
-let a = plckr(&1, &[1, 2, 3], &-1, &[3, 4, 5]);
-assert_eq!(a, [-2, -2, -2]);
-```
-*/
+ * @brief Plucker operation
+ * 
+ * @param[in] ld 
+ * @param[in] p 
+ * @param[in] mu 
+ * @param[in] q 
+ * @return std::array<int64_t, 3> 
+ */
 inline constexpr auto plckr(const int64_t& ld, const std::array<int64_t, 3>& p, const int64_t& mu,
                             const std::array<int64_t, 3>& q) -> std::array<int64_t, 3> {
     return {
@@ -61,14 +51,31 @@ inline constexpr auto plckr(const int64_t& ld, const std::array<int64_t, 3>& p, 
     };
 }
 
-template <typename P, typename L> class PgObject {
-  public:
+/**
+ * @brief Projective Point/Line
+ * 
+ * @tparam P 
+ * @tparam L 
+ */
+template <typename P, typename L> struct PgObject {
     using Dual = L;
 
     std::array<int64_t, 3> coord;
 
+    /**
+     * @brief Construct a new Pg Object object
+     * 
+     * @param[in] coord 
+     */
     constexpr explicit PgObject(std::array<int64_t, 3> coord) : coord{std::move(coord)} {}
 
+    /**
+     * @brief Equal to
+     * 
+     * @param[in] other 
+     * @return true 
+     * @return false 
+     */
     constexpr auto operator==(const P& other) const -> bool {
         if (this == &other) {
             return true;
@@ -78,83 +85,85 @@ template <typename P, typename L> class PgObject {
                && this->coord[0] * other.coord[1] == this->coord[1] * other.coord[0];
     }
 
+    /**
+     * @brief 
+     * 
+     * @return L 
+     */
     constexpr auto aux() const -> L { return L{this->coord}; }
 
+    /**
+     * @brief 
+     * 
+     * @param[in] other 
+     * @return int64_t 
+     */
     constexpr auto dot(const L& other) const -> int64_t { return ::dot(this->coord, other.coord); }
 
+    /**
+     * @brief 
+     * 
+     * @param[in] ld 
+     * @param[in] p 
+     * @param[in] mu 
+     * @param[in] q 
+     * @return P 
+     */
     static constexpr auto plucker(const int64_t& ld, const P& p, const int64_t& mu, const P& q)
         -> P {
         return P{::plckr(ld, p.coord, mu, q.coord)};
     }
 
+    /**
+     * @brief 
+     * 
+     * @param[in] other 
+     * @return true 
+     * @return false 
+     */
     constexpr auto incident(const L& other) const -> bool { return this->dot(other) == 0; }
 
+    /**
+     * @brief 
+     * 
+     * @param[in] rhs 
+     * @return L 
+     */
     constexpr auto circ(const P& rhs) const -> L { return L{::cross(this->coord, rhs.coord)}; }
 };
 
 class PgPoint;
 class PgLine;
 
+/**
+ * @brief PG Point
+ * 
+ */
 class PgPoint : public PgObject<PgPoint, PgLine> {
   public:
+
+    /**
+     * @brief Construct a new Pg Point object
+     * 
+     * @param[in] coord Homogeneous coordinate
+     */
     constexpr explicit PgPoint(std::array<int64_t, 3> coord)
         : PgObject<PgPoint, PgLine>{std::move(coord)} {}
 };
 
+/**
+ * @brief PG Line
+ * 
+ */
 class PgLine : public PgObject<PgLine, PgPoint> {
+  public:
+
+    /**
+     * @brief Construct a new Pg Line object
+     * 
+     * @param[in] coord Homogeneous coordinate
+     */
     constexpr explicit PgLine(std::array<int64_t, 3> coord)
         : PgObject<PgLine, PgPoint>{std::move(coord)} {}
 };
 
-/*
-pub struct $point {
-    pub coord: [int64_t; 3],
-}
-
-impl $point {
-    inline
-    auto new(coord: [int64_t; 3]) -> Self {
-        Self { coord }
-    }
-}
-
-impl PartialEq for $point {
-    auto eq(&self, other: &$point) -> bool {
-        cross(&self.coord, &other.coord) == [0, 0, 0]
-    }
-}
-impl Eq for $point {}
-
-impl ProjPlane<$line, int64_t> for $point {
-    auto aux(&self) -> $line {
-        $line::new(self.coord.clone())
-    }
-
-    auto dot(&self, line: &$line) -> int64_t {
-        dot(&self.coord, &line.coord)
-    } // basic measurement
-
-    auto plucker(ld: &int64_t, p: &Self, mu: &int64_t, q: &Self) -> Self {
-        Self::new(plckr(ld, &p.coord, mu, &q.coord))
-    }
-}
-
-impl ProjPlanePrim<$line> for $point {
-    auto incident(&self, _rhs: &$line) -> bool {
-        dot(&self.coord, &_rhs.coord) == 0
-    }
-
-    auto circ(&self, _rhs: &Self) -> $line {
-        $line::new(cross(&self.coord, &_rhs.coord))
-    }
-}
-
-define_point_or_line!(impl $point);
-define_point_or_line!(impl $line);
-define_line_for_point!(impl $line, $point);
-define_line_for_point!(impl $point, $line);
-
-define_point_and_line!(impl PgPoint, PgLine);
-define_point_and_line!(impl HypPoint, HypLine);
-define_point_and_line!(impl PgPoint, PgLine);
-*/
