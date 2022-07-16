@@ -34,7 +34,9 @@ namespace fun {
      */
     template <class L, class P = typename L::Dual>
     requires CKPlanePrimDual<L, P>
-    inline constexpr auto is_perpendicular(const L& m1, const L& m2) -> bool { return m1.perp().incident(m2); }
+    inline constexpr auto is_perpendicular(const L& m1, const L& m2) -> bool {
+        return m1.perp().incident(m2);
+    }
 
     /**
      * @brief

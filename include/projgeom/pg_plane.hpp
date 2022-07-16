@@ -1,9 +1,9 @@
 #pragma once
 
 #include <array>
+#include <cassert>
 
 #include "common_concepts.h"
-#include <cassert>
 
 namespace fun {
     /**
@@ -53,7 +53,9 @@ namespace fun {
      */
     template <class P>
     requires ProjPlanePrimDual<P>
-    inline constexpr auto coincident(const P& p, const P& q, const P& r) -> bool { return p.circ(q).incident(r); }
+    inline constexpr auto coincident(const P& p, const P& q, const P& r) -> bool {
+        return p.circ(q).incident(r);
+    }
 
     /**
      * @brief Check Pappus Theorem
@@ -65,7 +67,8 @@ namespace fun {
      */
     template <class P>
     requires ProjPlanePrimDual<P>
-    inline constexpr auto check_pappus(const std::array<P, 3>& co1, const std::array<P, 3>& co2) -> bool {
+    inline constexpr auto check_pappus(const std::array<P, 3>& co1, const std::array<P, 3>& co2)
+        -> bool {
         const auto& [a, b, c] = co1;
         const auto& [d, e, f] = co2;
         const auto g = (a.circ(e)).circ(b.circ(d));
@@ -98,7 +101,8 @@ namespace fun {
      */
     template <class P>
     requires ProjPlanePrimDual<P>
-    inline constexpr auto persp(const std::array<P, 3>& tri1, const std::array<P, 3>& tri2) -> bool {
+    inline constexpr auto persp(const std::array<P, 3>& tri1, const std::array<P, 3>& tri2)
+        -> bool {
         const auto& [a, b, c] = tri1;
         const auto& [d, e, f] = tri2;
         const auto& o = a.circ(d).circ(b.circ(e));
@@ -113,7 +117,8 @@ namespace fun {
      */
     template <class P>
     requires ProjPlanePrimDual<P>
-    inline constexpr auto check_desargue(const std::array<P, 3>& tri1, const std::array<P, 3>& tri2) -> bool {
+    inline constexpr auto check_desargue(const std::array<P, 3>& tri1, const std::array<P, 3>& tri2)
+        -> bool {
         const auto trid1 = tri_dual(tri1);
         const auto trid2 = tri_dual(tri2);
         const auto b1 = persp(tri1, tri2);
@@ -132,8 +137,8 @@ namespace fun {
         = STD_ALT::equality_comparable<P> && ProjPlanePrim<P, L> && requires(const P& p, const P& q,
                                                                              const L& l,
                                                                              const V& a) {
-        { p.aux() } -> STD_ALT::convertible_to<L>;              // line not incident with p
-        { p.dot(l) } -> STD_ALT::convertible_to<V>;             // for basic measurement
+        { p.aux() } -> STD_ALT::convertible_to<L>;                 // line not incident with p
+        { p.dot(l) } -> STD_ALT::convertible_to<V>;                // for basic measurement
         { P::plucker(a, p, a, q) } -> STD_ALT::convertible_to<P>;  // module computation
     };
 

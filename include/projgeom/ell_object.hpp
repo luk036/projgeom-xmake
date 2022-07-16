@@ -10,25 +10,20 @@ class EllPoint : public PgObject<EllPoint, EllLine> {
   public:
     constexpr explicit EllPoint(std::array<int64_t, 3> coord)
         : PgObject<EllPoint, EllLine>{coord} {}
-         
+
     constexpr auto perp() const -> EllLine;
-}; 
+};
 
 class EllLine : public PgObject<EllLine, EllPoint> {
   public:
-    constexpr explicit EllLine(std::array<int64_t, 3> coord)
-        : PgObject<EllLine, EllPoint>{coord} {}
-         
+    constexpr explicit EllLine(std::array<int64_t, 3> coord) : PgObject<EllLine, EllPoint>{coord} {}
+
     constexpr auto perp() const -> EllPoint;
-}; 
+};
 
-inline constexpr auto EllPoint::perp() const -> EllLine {
-    return EllLine{this->coord};
-}
+inline constexpr auto EllPoint::perp() const -> EllLine { return EllLine{this->coord}; }
 
-inline constexpr auto EllLine::perp() const -> EllPoint {
-    return EllPoint{this->coord};
-}
+inline constexpr auto EllLine::perp() const -> EllPoint { return EllPoint{this->coord}; }
 
 // impl CKPlanePrim<EllLine> for EllPoint {
 //     #[inline]

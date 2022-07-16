@@ -3,12 +3,12 @@
 #include <doctest/doctest.h>
 
 #include <projgeom/ck_plane.hpp>
-#include <projgeom/pg_plane.hpp>
-#include <projgeom/pg_object.hpp>
 #include <projgeom/ell_object.hpp>
 #include <projgeom/hyp_object.hpp>
 #include <projgeom/myck_object.hpp>
 #include <projgeom/persp_object.hpp>
+#include <projgeom/pg_object.hpp>
+#include <projgeom/pg_plane.hpp>
 
 TEST_CASE("it works") {
     auto p = PerspPoint({3, 4, 5});
