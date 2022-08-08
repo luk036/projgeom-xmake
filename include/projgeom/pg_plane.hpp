@@ -12,9 +12,10 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
-    template <class P, class L = typename P::Dual>
+    template <class P, class L>
     concept ProjPlanePrim
-        = STD_ALT::equality_comparable<P> && requires(const P& p, const P& q, const L& l) {
+        // = STD_ALT::equality_comparable<P> && requires(const P& p, const P& q, const L& l) {
+        = requires(const P& p, const P& q, const L& l) {
         { p.incident(l) } -> STD_ALT::convertible_to<bool>;  // incidence
         { p.circ(q) } -> STD_ALT::convertible_to<L>;         // join or meet
     };
@@ -25,7 +26,7 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
-    template <class P, class L = typename P::Dual>
+    template <class P, class L>
     concept ProjPlanePrimDual = ProjPlanePrim<P, L> && ProjPlanePrim<L, P>;
 
     /**
@@ -37,7 +38,7 @@ namespace fun {
      * @param[in] q 
      * @param[in] l 
      */
-    template <class P, class L = typename P::Dual>
+    template <class P, class L>
     requires ProjPlanePrimDual<P, L>
     inline auto check_axiom(const P& p, const P& q, const L& l) -> void {
         assert(p == p);
@@ -58,8 +59,8 @@ namespace fun {
      * @return true 
      * @return false 
      */
-    template <class P>
-    requires ProjPlanePrimDual<P>
+    template <class P, class L = typename P::Dual>
+    requires ProjPlanePrimDual<P, L>
     inline constexpr auto coincident(const P& p, const P& q, const P& r) -> bool {
         return p.circ(q).incident(r);
     }
@@ -73,8 +74,8 @@ namespace fun {
      * @return true 
      * @return false 
      */
-    template <class P>
-    requires ProjPlanePrimDual<P>
+    template <class P, class L = typename P::Dual>
+    requires ProjPlanePrimDual<P, L>
     inline constexpr auto check_pappus(const std::array<P, 3>& co1, const std::array<P, 3>& co2)
         -> bool {
         const auto& [a, b, c] = co1;
@@ -110,8 +111,8 @@ namespace fun {
      * @return true
      * @return false
      */
-    template <class P>
-    requires ProjPlanePrimDual<P>
+    template <class P, class L = typename P::Dual>
+    requires ProjPlanePrimDual<P, L>
     inline constexpr auto persp(const std::array<P, 3>& tri1, const std::array<P, 3>& tri2)
         -> bool {
         const auto& [a, b, c] = tri1;
@@ -129,8 +130,8 @@ namespace fun {
      * @return true
      * @return false
      */
-    template <class P>
-    requires ProjPlanePrimDual<P>
+    template <class P, class L = typename P::Dual>
+    requires ProjPlanePrimDual<P, L>
     inline constexpr auto check_desargue(const std::array<P, 3>& tri1, const std::array<P, 3>& tri2)
         -> bool {
         const auto trid1 = tri_dual(tri1);
@@ -147,7 +148,7 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
-    template <typename V, class P, class L = typename P::Dual>
+    template <typename V, class P, class L>
     concept ProjPlane = STD_ALT::equality_comparable<P> && ProjPlanePrim<P, L> //
         && requires(const P& p, const P& q, const L& l, const V& a) {
         { p.aux() } -> STD_ALT::convertible_to<L>;                 // line not incident with p
@@ -162,7 +163,7 @@ namespace fun {
      * @tparam P Point
      * @tparam L Line
      */
-    template <typename V, class P, class L = typename P::Dual>
+    template <typename V, class P, class L>
     concept ProjPlaneDual = ProjPlane<V, P, L> && ProjPlane<L, P, V>;
 
     /**
@@ -184,7 +185,7 @@ namespace fun {
      * @param[in] a 
      * @param[in] b 
      */
-    template <typename V, class P, class L = typename P::Dual>
+    template <typename V, class P, class L>
     requires ProjPlaneDual<V, P, L>
     inline auto check_axiom2(const P& p, const P& q, const L& l, const V& a, const V& b) -> void {
         assert(p.dot(l) == l.dot(p));
@@ -203,8 +204,8 @@ namespace fun {
      * @param[in] c 
      * @return P 
      */
-    template <typename V, class P>
-    requires ProjPlaneDual<V, P>
+    template <typename V, class P, class L = typename P::Dual>
+    requires ProjPlaneDual<V, P, L>
     inline constexpr auto harm_conj(const P& a, const P& b, const P& c) -> P {
         assert(coincident(a, b, c));
         const auto ab = a.circ(b);
@@ -223,7 +224,7 @@ namespace fun {
      * @param[in] p 
      * @return P 
      */
-    template <typename V, class P, class L = typename P::Dual>
+    template <typename V, class P, class L>
     requires ProjPlaneDual<V, P, L>
     inline constexpr auto involution(const P& origin, const L& mirror, const P& p) -> P {
         const auto po = p.circ(origin);
