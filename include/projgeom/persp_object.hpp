@@ -8,7 +8,7 @@ class PerspLine;
 
 /**
  * @brief Perspective Point
- * 
+ *
  */
 class PerspPoint : public PgObject<PerspPoint, PerspLine> {
   public:
@@ -16,23 +16,23 @@ class PerspPoint : public PgObject<PerspPoint, PerspLine> {
 
     /**
      * @brief Construct a new Persp Point object
-     * 
+     *
      * @param[in] coord Homogeneous coordinate
      */
     constexpr explicit PerspPoint(std::array<int64_t, 3> coord)
         : PgObject<PerspPoint, PerspLine>{coord} {}
 
     /**
-     * @brief 
-     * 
-     * @return const PerspLine& 
+     * @brief
+     *
+     * @return const PerspLine&
      */
     constexpr auto perp() const -> const PerspLine&;
 };
 
 /**
  * @brief Perspective Line
- * 
+ *
  */
 class PerspLine : public PgObject<PerspLine, PerspPoint> {
   public:
@@ -41,16 +41,16 @@ class PerspLine : public PgObject<PerspLine, PerspPoint> {
 
     /**
      * @brief Construct a new Persp Line object
-     * 
+     *
      * @param[in] coord Homogeneous coordinate
      */
     constexpr explicit PerspLine(std::array<int64_t, 3> coord)
         : PgObject<PerspLine, PerspPoint>{coord} {}
 
     /**
-     * @brief 
-     * 
-     * @return PerspPoint 
+     * @brief
+     *
+     * @return PerspPoint
      */
     constexpr auto perp() const -> PerspPoint;
 };
@@ -60,16 +60,16 @@ static constexpr PerspPoint I_RE({0, 1, 1});
 static constexpr PerspPoint I_IM({1, 0, 0});
 
 /**
- * @brief 
- * 
- * @return const PerspLine& 
+ * @brief
+ *
+ * @return const PerspLine&
  */
 inline constexpr auto PerspPoint::perp() const -> const PerspLine& { return L_INF; }
 
 /**
- * @brief 
- * 
- * @return PerspPoint 
+ * @brief
+ *
+ * @return PerspPoint
  */
 inline constexpr auto PerspLine::perp() const -> PerspPoint {
     const auto alpha = this->dot(I_RE);  // ???

@@ -34,9 +34,9 @@ namespace fun {
      *
      * @tparam P Point
      * @tparam L Line
-     * @param[in] p 
-     * @param[in] q 
-     * @param[in] l 
+     * @param[in] p
+     * @param[in] q
+     * @param[in] l
      */
     template <class P, class L>
     requires ProjPlanePrimDual<P, L>
@@ -52,12 +52,12 @@ namespace fun {
     /**
      * @brief Coincident
      *
-     * @tparam P 
-     * @param[in] p 
-     * @param[in] q 
-     * @param[in] r 
-     * @return true 
-     * @return false 
+     * @tparam P
+     * @param[in] p
+     * @param[in] q
+     * @param[in] r
+     * @return true
+     * @return false
      */
     template <class P, class L = typename P::Dual>
     requires ProjPlanePrimDual<P, L>
@@ -71,8 +71,8 @@ namespace fun {
      * @tparam P Point
      * @param[in] co1
      * @param[in] co2
-     * @return true 
-     * @return false 
+     * @return true
+     * @return false
      */
     template <class P, class L = typename P::Dual>
     requires ProjPlanePrimDual<P, L>
@@ -88,11 +88,11 @@ namespace fun {
 
     /**
      * @brief Dual of triangle
-     * 
+     *
      * @tparam P Point
-     * @tparam L Line 
+     * @tparam L Line
      * @param[in] tri
-     * @return std::array<L, 3> 
+     * @return std::array<L, 3>
      */
     template <class P, class L = typename P::Dual>
     requires ProjPlanePrimDual<P, L>
@@ -144,12 +144,12 @@ namespace fun {
     /**
      * @brief Projective plane Concept
      *
-     * @tparam V 
+     * @tparam V
      * @tparam P Point
      * @tparam L Line
      */
     template <typename V, class P, class L>
-    concept ProjPlane = STD_ALT::equality_comparable<P> && ProjPlanePrim<P, L> //
+    concept ProjPlane = STD_ALT::equality_comparable<P> && ProjPlanePrim<P, L>  //
         && requires(const P& p, const P& q, const L& l, const V& a) {
         { p.aux() } -> STD_ALT::convertible_to<L>;                 // line not incident with p
         { p.dot(l) } -> STD_ALT::convertible_to<V>;                // for basic measurement
@@ -159,7 +159,7 @@ namespace fun {
     /**
      * @brief Projective plane dual Concept
      *
-     * @tparam V 
+     * @tparam V
      * @tparam P Point
      * @tparam L Line
      */
@@ -175,15 +175,15 @@ namespace fun {
 
     /**
      * @brief Check Axiom
-     * 
-     * @tparam V 
-     * @tparam P 
-     * @tparam P::Dual 
-     * @param[in] p 
-     * @param[in] q 
-     * @param[in] l 
-     * @param[in] a 
-     * @param[in] b 
+     *
+     * @tparam V
+     * @tparam P
+     * @tparam P::Dual
+     * @param[in] p
+     * @param[in] q
+     * @param[in] l
+     * @param[in] a
+     * @param[in] b
      */
     template <typename V, class P, class L>
     requires ProjPlaneDual<V, P, L>
@@ -197,12 +197,12 @@ namespace fun {
     /**
      * @brief harmonic conjugate
      *
-     * @tparam V 
-     * @tparam P 
-     * @param[in] a 
-     * @param[in] b 
-     * @param[in] c 
-     * @return P 
+     * @tparam V
+     * @tparam P
+     * @param[in] a
+     * @param[in] b
+     * @param[in] c
+     * @return P
      */
     template <typename V, class P, class L = typename P::Dual>
     requires ProjPlaneDual<V, P, L>
@@ -215,14 +215,14 @@ namespace fun {
 
     /**
      * @brief Involution
-     * 
-     * @tparam V 
-     * @tparam P 
-     * @tparam P::Dual 
-     * @param[in] origin 
-     * @param[in] mirror 
-     * @param[in] p 
-     * @return P 
+     *
+     * @tparam V
+     * @tparam P
+     * @tparam P::Dual
+     * @param[in] origin
+     * @param[in] mirror
+     * @param[in] p
+     * @return P
      */
     template <typename V, class P, class L>
     requires ProjPlaneDual<V, P, L>
