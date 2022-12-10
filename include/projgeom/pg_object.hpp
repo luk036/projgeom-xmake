@@ -86,6 +86,15 @@ template <typename P, typename L> struct PgObject {
     }
 
     /**
+     * @brief Equal to
+     *
+     * @param[in] other
+     * @return true
+     * @return false
+     */
+    constexpr auto operator!=(const P& other) const -> bool { return !(*this == other); }
+
+    /**
      * @brief
      *
      * @return L
