@@ -22,11 +22,11 @@ jobs:
           sudo apt-get install g++-11
           sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 90
           sudo update-alternatives --install /usr/bin/c++ c++ /usr/bin/g++-11 90
-      - name: Install Conan
-        id: conan
-        uses: turtlebrowser/get-conan@main
-      - name: Conan version
-        run: echo "${{ steps.conan.outputs.version }}"
+      # - name: Install Conan
+      #   id: conan
+      #   uses: turtlebrowser/get-conan@main
+      # - name: Conan version
+      #   run: echo "${{ steps.conan.outputs.version }}"
       - name: Run tests
         run: |
           xmake --version
