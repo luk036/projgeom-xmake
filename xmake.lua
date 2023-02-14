@@ -3,26 +3,26 @@ set_languages("c++20")
 add_rules("mode.debug", "mode.release", "mode.coverage")
 add_requires("fmt", {alias = "fmt"})
 add_requires("doctest", {alias = "doctest"})
-add_requires("conan::range-v3/0.11.0", {alias = "range-v3"})
+add_requires("range-v3", {alias = "range-v3"})
 -- add_requires("range-v3", {alias = "range-v3"})
 
 -- header only package
-target("ProjGeom")
-    set_kind("static")
-    add_includedirs("include", {public = true})
-    if is_plat("linux") then
-        add_cxflags("-fconcepts", {force = true})
-    elseif is_plat("windows") then
-        add_cxflags("/W4 /WX /wd4819", {force = true})
-    end
-    add_packages("range-v3")
+-- target("ProjGeom")
+--     set_kind("static")
+--     add_includedirs("include", {public = true})
+--     if is_plat("linux") then
+--         add_cxflags("-fconcepts", {force = true})
+--     elseif is_plat("windows") then
+--         add_cxflags("/W4 /WX /wd4819", {force = true})
+--     end
+--     add_packages("range-v3")
 
 target("test_projgeom")
     set_kind("binary")
-    add_deps("ProjGeom")
+    add_includedirs("include", {public = true})
     add_files("tests/*.cpp")
     if is_plat("linux") then
-        add_cxflags("-fconcepts", {force = true})
+        -- add_cxflags("-fconcepts", {force = true})
     elseif is_plat("windows") then
         add_cxflags("/W4 /WX /wd4819", {force = true})
     end
