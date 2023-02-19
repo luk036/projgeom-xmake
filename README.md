@@ -1,1 +1,3 @@
-# Projective Geometry C++ Code with xmake
+# projgeom-xmake
+
+Projective Geometry with XMake
