@@ -6,6 +6,10 @@ add_requires("doctest", {alias = "doctest"})
 add_requires("range-v3", {alias = "range-v3"})
 -- add_requires("range-v3", {alias = "range-v3"})
 
+if is_mode("coverage") then
+    add_cxflags("-ftest-coverage", "-fprofile-arcs", {force = true})
+end
+
 -- header only package
 -- target("ProjGeom")
 --     set_kind("static")
