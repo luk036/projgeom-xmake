@@ -18,4 +18,5 @@ TEST_CASE("it works") {
   CHECK(is_ok);
   auto t = fun::altitude(p, m);
   bool res = fun::is_perpendicular(t, m);
+  CHECK(res);
 }

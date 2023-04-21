@@ -79,13 +79,13 @@ template <typename P, typename L> struct PgObject {
    * @return true
    * @return false
    */
-  constexpr auto operator==(const P &other) const -> bool {
-    if (this == &other) {
+  friend constexpr auto operator==(const P &lhs, const P &rhs) -> bool {
+    if (&lhs == &rhs) {
       return true;
     }
-    return this->coord[1] * other.coord[2] == this->coord[2] * other.coord[1] &&
-           this->coord[2] * other.coord[0] == this->coord[0] * other.coord[2] &&
-           this->coord[0] * other.coord[1] == this->coord[1] * other.coord[0];
+    return lhs.coord[1] * rhs.coord[2] == lhs.coord[2] * rhs.coord[1] &&
+           lhs.coord[2] * rhs.coord[0] == lhs.coord[0] * rhs.coord[2] &&
+           lhs.coord[0] * rhs.coord[1] == lhs.coord[1] * rhs.coord[0];
   }
 
   /**
@@ -95,8 +95,8 @@ template <typename P, typename L> struct PgObject {
    * @return true
    * @return false
    */
-  constexpr auto operator!=(const P &other) const -> bool {
-    return !(*this == other);
+  friend constexpr auto operator!=(const P &lhs, const P &rhs) -> bool {
+    return !(lhs == rhs);
   }
 
   /**
