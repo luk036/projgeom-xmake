@@ -13,8 +13,8 @@ namespace fun {
  * @tparam L Line
  */
 template <class P, class L>
-concept ProjPlanePrim =         //
-    std::equality_comparable<P> //
+concept ProjPlanePrim =              //
+    concepts::equality_comparable<P> //
     && requires(const P &p, const P &q, const L &l) {
          { p.incident(l) } -> concepts::convertible_to<bool>; // incidence
          { p.circ(q) } -> concepts::convertible_to<L>;        // join or meet
@@ -155,7 +155,7 @@ inline constexpr auto check_desargue(const std::array<P, 3> &tri1,
  */
 template <typename V, class P, class L>
 concept ProjPlane =
-    std::equality_comparable<P> && ProjPlanePrim<P, L> //
+    concepts::equality_comparable<P> && ProjPlanePrim<P, L> //
     && requires(const P &p, const P &q, const L &l, const V &a) {
          { p.aux() } -> concepts::convertible_to<L>; // line not incident with p
          { p.dot(l) } -> concepts::convertible_to<V>; // for basic measurement
