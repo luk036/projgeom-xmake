@@ -2,7 +2,6 @@
 
 #include <array>
 
-#include "common_concepts.h"
 #include "pg_plane.hpp"
 
 namespace fun {
@@ -13,9 +12,11 @@ namespace fun {
  * @tparam L Line
  */
 template <class P, class L = typename P::Dual>
-concept CKPlanePrim = ProjPlanePrim<P, L> && requires(const P &p, const L &l) {
-  { p.perp() } -> STD_ALT::convertible_to<L>;
-};
+concept CKPlanePrim =   //
+    ProjPlanePrim<P, L> //
+    && requires(const P &p, const L &l) {
+         { p.perp() } -> std::convertible_to<L>;
+       };
 
 /**
  * @brief C-K plane Concept (full)
@@ -33,8 +34,8 @@ concept CKPlanePrimDual = CKPlanePrim<P, L> && CKPlanePrim<L, P>;
  * @tparam L Line
  */
 template <class L, class P = typename L::Dual>
-requires CKPlanePrimDual<L, P>
-inline constexpr auto is_perpendicular(const L &m1, const L &m2) -> bool {
+  requires CKPlanePrimDual<L, P>
+constexpr auto is_perpendicular(const L &m1, const L &m2) -> bool {
   return m1.perp().incident(m2);
 }
 
@@ -45,8 +46,8 @@ inline constexpr auto is_perpendicular(const L &m1, const L &m2) -> bool {
  * @tparam L Line
  */
 template <class P, class L>
-requires CKPlanePrimDual<P, L>
-inline constexpr auto altitude(const P &p, const L &m) -> L {
+  requires CKPlanePrimDual<P, L>
+constexpr auto altitude(const P &p, const L &m) -> L {
   return m.perp().circ(p);
 }
 
@@ -57,8 +58,8 @@ inline constexpr auto altitude(const P &p, const L &m) -> L {
  * @return std::arrary<L, 3>
  */
 template <class P>
-requires CKPlanePrimDual<P>
-inline constexpr auto orthocenter(const std::array<P, 3> &tri) -> P {
+  requires CKPlanePrimDual<P>
+constexpr auto orthocenter(const std::array<P, 3> &tri) -> P {
   const auto &[a1, a2, a3] = tri;
   assert(!coincident(a1, a2, a3));
   const auto t1 = altitude(a1, a2.circ(a3));
@@ -74,9 +75,8 @@ inline constexpr auto orthocenter(const std::array<P, 3> &tri) -> P {
  * @return std::arrary<L, 3>
  */
 template <class P, class L>
-requires CKPlanePrimDual<P, L>
-inline constexpr auto tri_altitude(const std::array<P, 3> &tri)
-    -> std::array<L, 3> {
+  requires CKPlanePrimDual<P, L>
+constexpr auto tri_altitude(const std::array<P, 3> &tri) -> std::array<L, 3> {
   const auto [l1, l2, l3] = tri_dual(tri);
   const auto &[a1, a2, a3] = tri;
   assert(!coincident(a1, a2, a3));
@@ -105,9 +105,8 @@ template <typename V, class P, class L = typename P::Dual>
 concept CKPlaneDual = CKPlane<V, P, L> && CKPlane<L, P, V>;
 
 template <typename V, class P, class L = typename P::Dual>
-requires CKPlaneDual<V, P, L>
-inline constexpr auto reflect(const P &origin, const L &mirror, const P &p)
-    -> P {
+  requires CKPlaneDual<V, P, L>
+constexpr auto reflect(const P &origin, const L &mirror, const P &p) -> P {
   return involution(mirror.perp(), mirror, p);
 }
 
