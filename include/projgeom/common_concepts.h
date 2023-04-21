@@ -49,7 +49,7 @@ concept ring =                       //
        };
 
 template <typename K>
-concept ordered_ring = ring<K> && std::totally_ordered<K>;
+concept ordered_ring = ring<K> && concepts::totally_ordered<K>;
 
 template <typename Z>
 concept Integral =  //
