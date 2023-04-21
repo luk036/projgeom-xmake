@@ -15,7 +15,7 @@ template <class P, class L = typename P::Dual>
 concept CKPlanePrim =   //
     ProjPlanePrim<P, L> //
     && requires(const P &p, const L &l) {
-         { p.perp() } -> std::convertible_to<L>;
+         { p.perp() } -> concepts::convertible_to<L>;
        };
 
 /**

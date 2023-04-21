@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cmath>
-// #include <concepts/concepts.hpp>
 #include <concepts>
 #include <numeric>
 #include <type_traits>
@@ -9,6 +8,8 @@
 // #include <ranges>
 // namespace std = concepts;
 // namespace std = std;
+
+#include <concepts/concepts.hpp>
 
 namespace fun {
 
@@ -24,47 +25,40 @@ using Element_type =
  * @tparam T
  */
 template <typename T>
-concept Sequence = requires(T t, Element_type<T> x) {
-                     { t.size() } -> std::convertible_to<std::size_t>;
-                     { t.empty() } -> std::convertible_to<bool>;
-                     { t.back() } -> std::same_as<Element_type<T>>;
-                     { t.push_back(x) };
-                   };
+concept Sequence = //
+    requires(T t, Element_type<T> x) {
+      { t.size() } -> concepts::convertible_to<std::size_t>;
+      { t.empty() } -> concepts::convertible_to<bool>;
+      { t.back() } -> concepts::same_as<Element_type<T>>;
+      { t.push_back(x) };
+    };
 
 template <typename K>
-concept ring = std::equality_comparable<K> && requires(K a, K b) {
-                                                {
-                                                  a + b
-                                                  } -> std::convertible_to<K>;
-                                                {
-                                                  a - b
-                                                  } -> std::convertible_to<K>;
-                                                {
-                                                  a *b
-                                                  } -> std::convertible_to<K>;
-                                                { a += b } -> std::same_as<K &>;
-                                                { a -= b } -> std::same_as<K &>;
-                                                { a *= b } -> std::same_as<K &>;
-                                                {
-                                                  -a
-                                                  } -> std::convertible_to<K>;
-                                                {
-                                                  K(a)
-                                                  } -> std::convertible_to<K>;
-                                                {
-                                                  K(0)
-                                                  } -> std::convertible_to<K>;
-                                              };
+concept ring =                  //
+    std::equality_comparable<K> //
+    && requires(K a, K b) {
+         { a + b } -> concepts::convertible_to<K>;
+         { a - b } -> concepts::convertible_to<K>;
+         { a *b } -> concepts::convertible_to<K>;
+         { a += b } -> concepts::same_as<K &>;
+         { a -= b } -> concepts::same_as<K &>;
+         { a *= b } -> concepts::same_as<K &>;
+         { -a } -> concepts::convertible_to<K>;
+         { K(a) } -> concepts::convertible_to<K>;
+         { K(0) } -> concepts::convertible_to<K>;
+       };
 
 template <typename K>
 concept ordered_ring = ring<K> && std::totally_ordered<K>;
 
 template <typename Z>
-concept Integral = ordered_ring<Z> && requires(Z a, Z b) {
-                                        { a % b } -> std::convertible_to<Z>;
-                                        { a / b } -> std::convertible_to<Z>;
-                                        { a %= b } -> std::same_as<Z &>;
-                                        { a /= b } -> std::same_as<Z &>;
-                                      };
+concept Integral =  //
+    ordered_ring<Z> //
+    && requires(Z a, Z b) {
+         { a % b } -> concepts::convertible_to<Z>;
+         { a / b } -> concepts::convertible_to<Z>;
+         { a %= b } -> concepts::same_as<Z &>;
+         { a /= b } -> concepts::same_as<Z &>;
+       };
 
 } // namespace fun

@@ -16,8 +16,8 @@ template <class P, class L>
 concept ProjPlanePrim =         //
     std::equality_comparable<P> //
     && requires(const P &p, const P &q, const L &l) {
-         { p.incident(l) } -> std::convertible_to<bool>; // incidence
-         { p.circ(q) } -> std::convertible_to<L>;        // join or meet
+         { p.incident(l) } -> concepts::convertible_to<bool>; // incidence
+         { p.circ(q) } -> concepts::convertible_to<L>;        // join or meet
        };
 
 /**
@@ -157,9 +157,9 @@ template <typename V, class P, class L>
 concept ProjPlane =
     std::equality_comparable<P> && ProjPlanePrim<P, L> //
     && requires(const P &p, const P &q, const L &l, const V &a) {
-         { p.aux() } -> std::convertible_to<L>;  // line not incident with p
-         { p.dot(l) } -> std::convertible_to<V>; // for basic measurement
-         { P::plucker(a, p, a, q) } -> std::convertible_to<P>;
+         { p.aux() } -> concepts::convertible_to<L>; // line not incident with p
+         { p.dot(l) } -> concepts::convertible_to<V>; // for basic measurement
+         { P::plucker(a, p, a, q) } -> concepts::convertible_to<P>;
        };
 
 /**

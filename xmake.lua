@@ -3,6 +3,7 @@ set_languages("c++20")
 add_rules("mode.debug", "mode.release", "mode.coverage")
 add_requires("fmt", {alias = "fmt"})
 add_requires("doctest", {alias = "doctest"})
+add_requires("range-v3", {alias = "range-v3"})
 
 if is_mode("coverage") then
     add_cxflags("-ftest-coverage", "-fprofile-arcs", {force = true})
@@ -17,6 +18,7 @@ end
 --     elseif is_plat("windows") then
 --         add_cxflags("/W4 /WX /wd4819", {force = true})
 --     end
+--     add_packages("range-v3")
 
 target("test_projgeom")
     set_kind("binary")
@@ -27,7 +29,7 @@ target("test_projgeom")
     elseif is_plat("windows") then
         add_cxflags("/W4 /WX /wd4819", {force = true})
     end
-    add_packages("fmt", "doctest")
+    add_packages("fmt", "doctest", "range-v3")
 
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
