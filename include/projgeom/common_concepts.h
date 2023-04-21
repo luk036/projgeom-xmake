@@ -34,8 +34,8 @@ concept Sequence = //
     };
 
 template <typename K>
-concept ring =                  //
-    std::equality_comparable<K> //
+concept ring =                       //
+    concepts::equality_comparable<K> //
     && requires(K a, K b) {
          { a + b } -> concepts::convertible_to<K>;
          { a - b } -> concepts::convertible_to<K>;
