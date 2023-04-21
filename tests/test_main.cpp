@@ -14,7 +14,8 @@ TEST_CASE("it works") {
   auto p = PerspPoint({3, 4, 5});
   auto q = PerspPoint({0, 4, 1});
   auto m = PerspLine({1, 0, 4});
-  CHECK(fun::check_axiom(p, q, m));
+  bool is_ok = fun::check_axiom(p, q, m);
+  CHECK(is_ok);
   auto t = fun::altitude(p, m);
-  CHECK(fun::is_perpendicular(t, m));
+  bool res = fun::is_perpendicular(t, m);
 }
