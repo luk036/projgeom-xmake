@@ -39,7 +39,9 @@ concept ProjPlanePrimDual = ProjPlanePrim<P, L> && ProjPlanePrim<L, P>;
  * @param[in] l
  */
 template <class P, class L>
+#if __cpp_concepts >= 201907L
   requires ProjPlanePrimDual<P, L>
+#endif
 inline auto check_axiom(const P &p, const P &q, const L &l) -> bool {
   if (p != p)
     return false;
