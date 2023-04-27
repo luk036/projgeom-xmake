@@ -3,32 +3,11 @@
 #include <array>
 #include <cassert>
 
-#include "common_concepts.h"
+#if __cpp_concepts >= 201907L
+#include "pg_concepts.hpp"
+#endif
 
 namespace fun {
-/**
- * @brief Projective plane Concept
- *
- * @tparam P Point
- * @tparam L Line
- */
-template <class P, class L>
-concept ProjPlanePrim =              //
-    concepts::equality_comparable<P> //
-    && requires(const P &p, const P &q, const L &l) {
-         { p.incident(l) } -> concepts::convertible_to<bool>; // incidence
-         { p.circ(q) } -> concepts::convertible_to<L>;        // join or meet
-       };
-
-/**
- * @brief Projective plane Concept (full)
- *
- * @tparam P Point
- * @tparam L Line
- */
-template <class P, class L>
-concept ProjPlanePrimDual = ProjPlanePrim<P, L> && ProjPlanePrim<L, P>;
-
 /**
  * @brief Check Projective plane Axiom
  *
@@ -66,7 +45,9 @@ inline auto check_axiom(const P &p, const P &q, const L &l) -> bool {
  * @return false
  */
 template <class P, class L = typename P::Dual>
+#if __cpp_concepts >= 201907L
   requires ProjPlanePrimDual<P, L>
+#endif
 inline constexpr auto coincident(const P &p, const P &q, const P &r) -> bool {
   return p.circ(q).incident(r);
 }
@@ -81,7 +62,9 @@ inline constexpr auto coincident(const P &p, const P &q, const P &r) -> bool {
  * @return false
  */
 template <class P, class L = typename P::Dual>
+#if __cpp_concepts >= 201907L
   requires ProjPlanePrimDual<P, L>
+#endif
 inline constexpr auto check_pappus(const std::array<P, 3> &co1,
                                    const std::array<P, 3> &co2) -> bool {
   const auto &[a, b, c] = co1;
@@ -101,7 +84,9 @@ inline constexpr auto check_pappus(const std::array<P, 3> &co1,
  * @return std::array<L, 3>
  */
 template <class P, class L = typename P::Dual>
+#if __cpp_concepts >= 201907L
   requires ProjPlanePrimDual<P, L>
+#endif
 inline constexpr auto tri_dual(const std::array<P, 3> &tri)
     -> std::array<L, 3> {
   const auto &[a1, a2, a3] = tri;
@@ -119,7 +104,9 @@ inline constexpr auto tri_dual(const std::array<P, 3> &tri)
  * @return false
  */
 template <class P, class L = typename P::Dual>
+#if __cpp_concepts >= 201907L
   requires ProjPlanePrimDual<P, L>
+#endif
 inline constexpr auto persp(const std::array<P, 3> &tri1,
                             const std::array<P, 3> &tri2) -> bool {
   const auto &[a, b, c] = tri1;
@@ -138,7 +125,9 @@ inline constexpr auto persp(const std::array<P, 3> &tri1,
  * @return false
  */
 template <class P, class L = typename P::Dual>
+#if __cpp_concepts >= 201907L
   requires ProjPlanePrimDual<P, L>
+#endif
 inline constexpr auto check_desargue(const std::array<P, 3> &tri1,
                                      const std::array<P, 3> &tri2) -> bool {
   const auto trid1 = tri_dual(tri1);
@@ -147,32 +136,6 @@ inline constexpr auto check_desargue(const std::array<P, 3> &tri1,
   const auto b2 = persp(trid1, trid2);
   return (b1 && b2) || (!b1 && !b2);
 }
-
-/**
- * @brief Projective plane Concept
- *
- * @tparam V
- * @tparam P Point
- * @tparam L Line
- */
-template <typename V, class P, class L>
-concept ProjPlane =
-    concepts::equality_comparable<P> && ProjPlanePrim<P, L> //
-    && requires(const P &p, const P &q, const L &l, const V &a) {
-         { p.aux() } -> concepts::convertible_to<L>; // line not incident with p
-         { p.dot(l) } -> concepts::convertible_to<V>; // for basic measurement
-         { P::plucker(a, p, a, q) } -> concepts::convertible_to<P>;
-       };
-
-/**
- * @brief Projective plane dual Concept
- *
- * @tparam V
- * @tparam P Point
- * @tparam L Line
- */
-template <typename V, class P, class L>
-concept ProjPlaneDual = ProjPlane<V, P, L> && ProjPlane<V, L, P>;
 
 /**
  * @brief Check Projective plane Axiom 2
@@ -194,7 +157,9 @@ concept ProjPlaneDual = ProjPlane<V, P, L> && ProjPlane<V, L, P>;
  * @param[in] b
  */
 template <typename V, class P, class L>
+#if __cpp_concepts >= 201907L
   requires ProjPlaneDual<V, P, L>
+#endif
 inline auto check_axiom2(const P &p, const P &q, const L &l, const V &a,
                          const V &b) -> bool {
   if (p.dot(l) != l.dot(p))
@@ -218,7 +183,9 @@ inline auto check_axiom2(const P &p, const P &q, const L &l, const V &a,
  * @return P
  */
 template <typename V, class P, class L = typename P::Dual>
+#if __cpp_concepts >= 201907L
   requires ProjPlaneDual<V, P, L>
+#endif
 inline constexpr auto harm_conj(const P &a, const P &b, const P &c) -> P {
   assert(coincident(a, b, c));
   const auto ab = a.circ(b);
@@ -238,7 +205,9 @@ inline constexpr auto harm_conj(const P &a, const P &b, const P &c) -> P {
  * @return P
  */
 template <typename V, class P, class L>
+#if __cpp_concepts >= 201907L
   requires ProjPlaneDual<V, P, L>
+#endif
 inline constexpr auto involution(const P &origin, const L &mirror, const P &p)
     -> P {
   const auto po = p.circ(origin);

@@ -1,8 +1,9 @@
 #pragma once
 
 #include <array>
+#include <cstdint>
 
-#include "common_concepts.h"
+// #include "common_concepts.h"
 #include "pg_plane.hpp"
 
 /**
@@ -12,8 +13,8 @@
  * @param[in] b
  * @return int64_t
  */
-inline constexpr auto dot(const std::array<int64_t, 3> &a,
-                          const std::array<int64_t, 3> &b) -> int64_t {
+constexpr auto dot(const std::array<int64_t, 3> &a,
+                   const std::array<int64_t, 3> &b) -> int64_t {
   return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
@@ -24,8 +25,8 @@ inline constexpr auto dot(const std::array<int64_t, 3> &a,
  * @param[in] b
  * @return std::array<int64_t, 3>
  */
-inline constexpr auto cross(const std::array<int64_t, 3> &a,
-                            const std::array<int64_t, 3> &b)
+constexpr auto cross(const std::array<int64_t, 3> &a,
+                     const std::array<int64_t, 3> &b)
     -> std::array<int64_t, 3> {
   return {
       a[1] * b[2] - a[2] * b[1],
@@ -43,8 +44,8 @@ inline constexpr auto cross(const std::array<int64_t, 3> &a,
  * @param[in] q
  * @return std::array<int64_t, 3>
  */
-inline constexpr auto plckr(const int64_t &ld, const std::array<int64_t, 3> &p,
-                            const int64_t &mu, const std::array<int64_t, 3> &q)
+constexpr auto plckr(const int64_t &ld, const std::array<int64_t, 3> &p,
+                     const int64_t &mu, const std::array<int64_t, 3> &q)
     -> std::array<int64_t, 3> {
   return {
       ld * p[0] + mu * q[0],
@@ -80,12 +81,12 @@ template <typename P, typename L> struct PgObject {
    * @return false
    */
   friend constexpr auto operator==(const P &lhs, const P &rhs) -> bool {
-    if (&lhs == &rhs) {
-      return true;
-    }
-    return lhs.coord[1] * rhs.coord[2] == lhs.coord[2] * rhs.coord[1] &&
-           lhs.coord[2] * rhs.coord[0] == lhs.coord[0] * rhs.coord[2] &&
-           lhs.coord[0] * rhs.coord[1] == lhs.coord[1] * rhs.coord[0];
+    return &lhs == &rhs
+               ? true
+               : lhs.coord[1] * rhs.coord[2] == lhs.coord[2] * rhs.coord[1] &&
+                     lhs.coord[2] * rhs.coord[0] ==
+                         lhs.coord[0] * rhs.coord[2] &&
+                     lhs.coord[0] * rhs.coord[1] == lhs.coord[1] * rhs.coord[0];
   }
 
   /**

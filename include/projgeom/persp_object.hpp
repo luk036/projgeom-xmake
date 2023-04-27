@@ -64,17 +64,13 @@ static constexpr PerspPoint I_IM({1, 0, 0});
  *
  * @return const PerspLine&
  */
-inline constexpr auto PerspPoint::perp() const -> const PerspLine & {
-  return L_INF;
-}
+constexpr auto PerspPoint::perp() const -> const PerspLine & { return L_INF; }
 
 /**
  * @brief
  *
  * @return PerspPoint
  */
-inline constexpr auto PerspLine::perp() const -> PerspPoint {
-  const auto alpha = this->dot(I_RE); // ???
-  const auto beta = this->dot(I_IM);  // ???
-  return PerspPoint::plucker(alpha, I_RE, beta, I_IM);
+constexpr auto PerspLine::perp() const -> PerspPoint {
+  return PerspPoint::plucker(this->dot(I_RE), I_RE, this->dot(I_IM), I_IM);
 }
